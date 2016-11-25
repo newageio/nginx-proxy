@@ -85,7 +85,7 @@ upstream {{ $host }} {
 	{{ range $knownNetwork := $CurrentContainer.Networks }}
 		{{ range $containerNetwork := $container.Networks }}
 			{{ if eq $knownNetwork.Name $containerNetwork.Name }}
-				## Can be connect with "{{ $containerNetwork.Name }}" network
+			## Can be connect with "{{ $containerNetwork.Name }}" network
 
 				{{/* If only 1 port exposed, use that */}}
 				{{ if eq $addrLen 1 }}
@@ -185,6 +185,7 @@ server {
                 include /etc/nginx/vhost.d/default_location;
                 {{ end }}
 	}
+
 }
 
 {{ end }}
@@ -200,6 +201,10 @@ server {
 	include {{ printf "/etc/nginx/vhost.d/%s" $host }};
 	{{ else if (exists "/etc/nginx/vhost.d/default") }}
 	include /etc/nginx/vhost.d/default;
+	{{ end }}
+
+	{{ range $val, $key:= groupByMulti $containers ".Env.NP_ADD_LOCATION" "," }}
+	include {{ $val }};
 	{{ end }}
 
 	location / {
@@ -219,6 +224,7 @@ server {
                 include /etc/nginx/vhost.d/default_location;
                 {{ end }}
 	}
+
 }
 
 {{ if (and (not $is_https) (exists "/etc/nginx/certs/default.crt") (exists "/etc/nginx/certs/default.key")) }}
