@@ -1,7 +1,7 @@
 version: '2'
 services:
   nginx-proxy:
-    # image: jwilder/nginx-proxy
+    image: jwilder/nginx-proxy
     build: ./
     container_name: nginx-proxy
     ports:
@@ -12,5 +12,5 @@ services:
   whoami:
     image: jwilder/whoami
     environment:
-      - VIRTUAL_HOST=api.lotto.app
+      - VIRTUAL_HOST=whoami.app
       - NP_ADD_LOCATION=whoami.conf
